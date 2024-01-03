@@ -1,0 +1,144 @@
+
+CREATE TABLE IF NOT EXISTS Departement (
+    Code VARCHAR(50) UNIQUE PRIMARY KEY,
+    Name VARCHAR(255) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS Admins (
+    Code VARCHAR(50) PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS Doctors (
+    ID SERIAL PRIMARY KEY,
+    Age INT,
+    Name VARCHAR(255) NOT NULL,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Gender VARCHAR(10) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS Patients (
+    ID SERIAL PRIMARY KEY,
+    Age INT,
+    Name VARCHAR(255) NOT NULL,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Gender VARCHAR(10) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS Treats (
+    DoctorID INT REFERENCES Doctors(ID),
+    PatientID INT REFERENCES Patients(ID),
+    PRIMARY KEY (DoctorID, PatientID)
+);
+
+
+CREATE TABLE IF NOT EXISTS Belongs_to (
+    PatientID INT REFERENCES Patients(ID),
+    DeptCode VARCHAR(50) REFERENCES Departement(Code),
+    Dept_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (PatientID, DeptCode)
+);
+
+
+CREATE TABLE IF NOT EXISTS works_for (
+    DoctorID INT REFERENCES Doctors(ID),
+    DeptCode VARCHAR(50) REFERENCES Departement(Code),
+    Dept_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (DoctorID, DeptCode)
+);
+
+
+CREATE TABLE IF NOT EXISTS Access (
+    AccessID SERIAL PRIMARY KEY,
+    AdminCode VARCHAR(50) REFERENCES Admins(Code),
+    DeptCode VARCHAR(50) REFERENCES Departement(Code),
+    DoctorID INT REFERENCES Doctors(ID),
+    PatientID INT REFERENCES Patients(ID),
+    AccessDate DATE,
+    AccessTime TIME
+);
+
+
+
+CREATE TABLE IF NOT EXISTS Scans (
+    ScanID SERIAL PRIMARY KEY,
+    DepartementCode VARCHAR(50) REFERENCES Departement(Code),
+    PatientID INT REFERENCES Patients(ID),
+    DoctorID INT REFERENCES Doctors(ID),
+    ScanDate DATE,
+    ScanTime TIME
+);
+
+
+CREATE TABLE IF NOT EXISTS ScanFiles (
+    ScanID INT REFERENCES Scans(ScanID),
+    File TEXT,
+    PRIMARY KEY (ScanID, File)
+);
+
+
+CREATE TABLE IF NOT EXISTS Appointments (
+    AppointmentID SERIAL PRIMARY KEY,
+    DepartementCode VARCHAR(50) REFERENCES Departement(Code),
+    PatientID INT REFERENCES Patients(ID),
+    DoctorID INT REFERENCES Doctors(ID),
+    AppointmentDate DATE,
+    AppointmentTime TIME
+);
+
+
+CREATE TABLE IF NOT EXISTS Prescriptions (
+    PrescriptionID SERIAL PRIMARY KEY,
+    DepartementCode VARCHAR(50) REFERENCES Departement(Code),
+    PatientID INT REFERENCES Patients(ID),
+    DoctorID INT REFERENCES Doctors(ID),
+    PrescriptionDate DATE,
+    PrescriptionTime TIME
+);
+
+
+CREATE TABLE IF NOT EXISTS PrescriptionFiles (
+    PrescriptionID INT REFERENCES Prescriptions(PrescriptionID),
+    File TEXT,
+    PRIMARY KEY (PrescriptionID, File)
+);
+
+
+CREATE TABLE IF NOT EXISTS Scans_belongs_to (
+    ScanID INT REFERENCES Scans(ScanID),
+    PatientID INT REFERENCES Patients(ID),
+    DoctorID INT REFERENCES Doctors(ID),
+    DepartementCode VARCHAR(50) REFERENCES Departement(Code),
+    PRIMARY KEY (ScanID, PatientID, DoctorID, DepartementCode)
+);
+
+
+CREATE TABLE IF NOT EXISTS Appointments_belongs_to (
+    AppointmentID INT REFERENCES Appointments(AppointmentID),
+    PatientID INT REFERENCES Patients(ID),
+    DoctorID INT REFERENCES Doctors(ID),
+    DepartementCode VARCHAR(50) REFERENCES Departement(Code),
+    PRIMARY KEY (AppointmentID, PatientID, DoctorID, DepartementCode)
+);
+
+
+CREATE TABLE IF NOT EXISTS Prescriptions_belongs_to (
+    PrescriptionID INT REFERENCES Prescriptions(PrescriptionID),
+    PatientID INT REFERENCES Patients(ID),
+    DoctorID INT REFERENCES Doctors(ID),
+    DepartementCode VARCHAR(50) REFERENCES Departement(Code),
+    PRIMARY KEY (PrescriptionID, PatientID, DoctorID, DepartementCode)
+);
+
+
+
