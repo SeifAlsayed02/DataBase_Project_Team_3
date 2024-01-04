@@ -135,39 +135,107 @@
 
       <section class="Patient-info">
         <div class="container" data-aos="fade-up">
-          <section class="employees_attendace">
-            <div class="employees_data">
-              <div class="container">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Age</th>
-                      <th>Gender</th>
-                      <th>Appointment</th>
-                      <th>Scan</th>
-                      <th>Prescription</th>
-                      <th>Delete Patient</th>
-                    </tr>
-                  </thead>
+          
+        <br>
+        <h2>View Section</h2>
+        <br>
+        <h4><u>Appointments</u></h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Appointment ID</th>
+      <th>Doctor ID</th>
+      <th>Doctor's Name</th>
+      <th>Date</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+    {% for appointments in appointments %}
+      <tr>
+        <td>{{ appointments.appointmentid }}</td>
+        <td>{{ appointments.doctorid }}</td>
+        {% for doctor in doctors %}
+          {% if doctor.id == appointments.doctorid %}
+            <td>{{ doctor.name }}</td>
+          {% endif %}
+        {% endfor %}
+        <td>{{ appointments.appointmentdate }}</td>
+        <td>{{ appointments.appointmenttime }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-                  <tbody id="tbody">
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td><input type="file" /></td>
-                      <td><input type="file" /></td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </section>
+        <h4><u>Scans</u></h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Doctor ID</th>
+              <th>Doctor's Name</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>File</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            {% for scans in scans %}
+              <tr>
+                <td>{{ scans.scanid }}</td>
+                <td>{{ scans.doctorid }}</td>
+                {% for doctor in doctors %}
+                  {% if doctor.id == scans.doctorid %}
+                    <td>{{ doctor.name }}</td>
+                  {% endif %}
+                {% endfor %}
+                <td>{{ scans.scandate }}</td>
+                <td>{{ scans.scantime }}</td>
+                <td>
+                {% for file in scanfiles %}
+                  <!-- {% if scans.scanid == scanfiles.scanid  %} -->
+                  <td>{{ scanfiles.file }}</td>
+                  <!-- {% endif %} -->
+                {% endfor %}
+              </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <h4><u>Prescriptions</u></h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Doctor ID</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>File</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            {% for prescriptions in prescriptions %}
+              <tr>
+                <td>{{ prescriptions.prescriptionid }}</td>
+                <td>{{ prescriptions.doctorid }}</td>
+                {% for doctor in doctors %}
+                  {% if doctor.id == prescriptions.doctorid %}
+                    <td>{{ doctor.name }}</td>
+                  {% endif %}
+                {% endfor %}
+                <td>{{ prescriptions.prescriptiondate }}</td>
+                <td>{{ prescriptions.prescriptiontime }}</td>
+                <td>
+                {% for file in scanfiles %}
+                  <!-- {% if prescriptions.scanid == scanfiles.scanid  %} -->
+                  <td>{{ scanfiles.file }}</td>
+                  <!-- {% endif %} -->
+                {% endfor %}
+              </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
         </div>
       </section>
     </main>
