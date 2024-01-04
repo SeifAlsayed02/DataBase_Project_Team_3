@@ -76,6 +76,141 @@ class PrescriptionFile(db.Model):
     prescription_id = db.Column(db.Integer, db.ForeignKey('prescriptions.prescription_id'), nullable=False)
     file = db.Column(db.Text, nullable=False)
 
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    The_email = request.form.get('exampleInputEmail1')
+    The_password = request.form.get('exampleInputPassword1')
+
+    # Search in Doctor table
+    doctor = Doctor.query.filter_by(email=The_email, password=The_password).first()
+    if doctor:
+        return redirect(url_for('doctor_dashboard', user_id=doctor.id)) 
+    
+    # Search in Admin table
+    admin = Admin.query.filter_by(email=The_email, password=The_password).first()
+    if admin:
+        return redirect(url_for('admin_dashboard', user_code=admin.code))
+
+    
+    # Search in Patient table
+    patient = Patient.query.filter_by(email=The_email, password=The_password).first()
+    if patient:
+        return redirect(url_for('patient_dashboard', user_id=patient.id))
+
+    # If no user is found
+    return render_template('index.html', error='Invalid login credentials')
+
+    
+@app.route('/signup/patient', methods=['GET', 'POST'])
+def signup_patient():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        age = request.form.get('age')
+        gender = request.form.get('gender')
+        username = request.form.get('username')  # Add this line
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Create a new Patient instance
+        new_patient = Patient(name=name, age=age, gender=gender, username=username, email=email, password=password)
+
+        # Add the new patient to the database
+        db.session.add(new_patient)
+        db.session.commit()
+
+        # Redirect to the patient dashboard with the new user's ID
+        return redirect(url_for('patient_dashboard', user_id=new_patient.id))
+
+    return render_template('signup_patient.html')
+
+@app.route('/patient/details/<int:user_id>')
+def patient_details(user_id):
+    user = Patient.query.get(user_id)
+    return render_template('patient_details.html', user=user)
+
+@app.route('/signup/patient/<int:user_id>', methods=['GET', 'POST'])
+def reserve_appointment(user_id):
+    user = Patient.query.get(user_id)
+    doctors = Doctor.query.all()
+
+    # Fetch patient's appointments
+    appointments = Appointment.query.filter_by(patientid=user_id).all()
+
+    if request.method == 'POST':
+        appointmentdate = request.form.get('appointment_date')
+        appointmenttime = request.form.get('appointment_time')
+        doctorid = request.form.get('doctor_id')
+        message = request.form.get('message')
+        print(f"Date: {appointmentdate}, Time: {appointmenttime}, Doctor ID: {doctorid}, Message: {message}")
+        new_appointment = Appointment(
+            appointmentdate=appointmentdate,
+            appointmenttime=appointmenttime,
+            doctorid=doctorid,
+            patientid=user_id,
+            message=message
+        )
+
+        db.session.add(new_appointment)
+        db.session.commit()
+
+        return redirect(url_for('patient_dashboard', user_id=user_id))
+
+    return render_template('patient_dashboard.html', user=user, doctors=doctors, appointments=appointments)
+
+@app.route('/signup/doctor', methods=['GET', 'POST'])
+def signup_doctor():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        age = request.form.get('age')
+        gender = request.form.get('gender')
+        username = request.form.get('username') 
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Create a new doctor instance
+        new_doctor = Doctor(name=name, age=age, gender=gender, username=username, email=email, password=password)
+
+        # Add the new doctor to the database
+        db.session.add(new_doctor)
+        db.session.commit()
+
+        # Redirect to the doctor dashboard with the new user's ID
+        return redirect(url_for('doctor_dashboard', user_id=new_doctor.id))
+
+    return render_template('signup_doctor.html')
+
+
+@app.route('/admin/dashboard/<string:user_code>')
+def admin_dashboard(user_code):
+    user = Admin.query.get(user_code)
+    if user:
+        print(user.code)
+        print(user.username)
+        print(user.email)
+    return render_template('patient_dashboard.html')
+
+@app.route('/doctor/dashboard/<int:user_id>', methods=['GET', 'POST'])
+def doctor_dashboard(user_id):
+    print("Userrrrrrrrrr")
+    user = Doctor.query.get(user_id)
+    patients = Patient.query.all()
+    if user:
+        print(user.id)
+        print(user.username)
+        print(user.email)
+    return render_template('doctor_dashboard.html', user=user, patients=patients)
+
+
 @app.route('/patient/dashboard/<int:user_id>', methods=['GET', 'POST'])
 def patient_dashboard(user_id):
     user = Patient.query.get(user_id)
@@ -108,100 +243,6 @@ def patient_dashboard(user_id):
         return redirect(url_for('patient_dashboard', user_id=user_id))
 
     return render_template('patient_dashboard.html', user=user, doctors=doctors,scanfiles=scanfiles, appointments=appointments, scans=scans, prescriptions=prescriptions)
-
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    The_email = request.form.get('exampleInputEmail1')
-    The_password = request.form.get('exampleInputPassword1')
-
-    # Search in Admin table
-    admin = Admin.query.filter_by(email=The_email, password=The_password).first()
-    if admin:
-        return redirect(url_for('admin_dashboard', user_code=admin.code))
-
-    # Search in Doctor table
-    doctor = Doctor.query.filter_by(email=The_email, password=The_password).first()
-    if doctor:
-        return redirect(url_for('doctor_dashboard', user_id=doctor.id))
-
-    # Search in Patient table
-    patient = Patient.query.filter_by(email=The_email, password=The_password).first()
-    if patient:
-        return redirect(url_for('patient_dashboard', user_id=patient.id))
-
-    # If no user is found
-    return render_template('index.html', error='Invalid login credentials')
-
-    
-@app.route('/signup/patient', methods=['GET', 'POST'])
-def signup_patient():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        age = request.form.get('age')
-        gender = request.form.get('gender')
-        username = request.form.get('username')  # Add this line
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        # Create a new Patient instance
-        new_patient = Patient(name=name, age=age, gender=gender, username=username, email=email, password=password)
-
-        # Add the new patient to the database
-        db.session.add(new_patient)
-        db.session.commit()
-
-        # Redirect to the patient dashboard with the new user's ID
-        return redirect(url_for('patient_dashboard', user_id=new_patient.id))
-
-    return render_template('signup_patient.html')
-
-@app.route('/signup/doctor', methods=['GET', 'POST'])
-def signup_doctor():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        age = request.form.get('age')
-        gender = request.form.get('gender')
-        username = request.form.get('username') 
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        # Create a new doctor instance
-        new_doctor = Doctor(name=name, age=age, gender=gender, username=username, email=email, password=password)
-
-        # Add the new doctor to the database
-        db.session.add(new_doctor)
-        db.session.commit()
-
-        # Redirect to the doctor dashboard with the new user's ID
-        return redirect(url_for('doctor_dashboard', user_id=new_doctor.id))
-
-    return render_template('signup_doctor.html')
-
-@app.route('/admin/dashboard/<string:user_code>')
-def admin_dashboard(user_code):
-    user = Admin.query.get(user_code)
-    if user:
-        print(user.code)
-        print(user.username)
-        print(user.email)
-    return render_template('patient_dashboard.html')
-
-@app.route('/doctor/dashboard/<int:user_id>')
-def doctor_dashboard(user_id):
-    user = Doctor.query.get(user_id)
-    if user:
-        print(user.id)
-        print(user.username)
-        print(user.email)
-    return render_template('patient_dashboard.html')
-
 
 
 if __name__ == '__main__':
