@@ -34,8 +34,8 @@
                           type="email"
                           class="form-control"
                           id="exampleInputEmail1"
-                          name="exampleInputEmail1">
-                        
+                          name="exampleInputEmail1"
+                        />
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
@@ -43,33 +43,33 @@
                           type="password"
                           class="form-control"
                           id="exampleInputPassword1"
-                          name="exampleInputPassword1">
-                        
+                          name="exampleInputPassword1"
+                        />
                       </div>
                       <div class="form-group">
                         <h6>Department</h6>
                         <div class="department">
-                          <div class="dept1">
-                            <input
+                          <label
+                            ><input
                               type="radio"
                               id="dept1"
                               name="department"
                               value="dept1"
-                            />
-                            <label for="dept1">Dept A</label>
-                          </div>
-                          <div class="dept2">
-                            <input
+                            />Dept A</label
+                          >
+                          <label
+                            ><input
                               type="radio"
                               id="dept2"
                               name="department"
                               value="dept2"
-                            />
-                            <label for="dept2">Dept B</label>
-                          </div>
+                            />Dept B</label
+                          >
                         </div>
                       </div>
-                      <button type="submit" class="btn btn-theme">Login</button>
+                      <button class="btn btn-theme">
+                        <a href="patient_dashboard.html">Login</a>
+                      </button>
                       <a href="#l" class="forgot-link float-right text-primary"
                         >Forgot password?</a
                       >
@@ -80,11 +80,10 @@
                   <div class="account-block rounded-right">
                     <div class="overlay rounded-right"></div>
                     <div class="account-testimonial">
-                      <h4 class="text-white mb-4">
-                        Hospital_Team3
-                      </h4>
+                      <h4 class="text-white mb-4">Hospital_Team3</h4>
                       <p class="lead text-white">
-                        "This is a Database Project for ICU & Cardiology Departments "
+                        "This is a Database Project for ICU & Cardiology
+                        Departments "
                       </p>
                       <p>-Dr Ahmed Hesham</p>
                     </div>
@@ -95,7 +94,13 @@
           </div>
 
           <p class="text-muted text-center mt-3 mb-0">
-            Don't have an account as a?
+            Don't have an account as a
+            <select name="user_type" id="user_type">
+              <option value="" selected></option>
+              <option value="Patient">Patient</option>
+              <option value="doctor">Doctor</option>
+            </select>
+            ?
             <a href="{{ url_for('signup_patient') }}" class="text-primary ml-1"
               >Patient</a
             >
@@ -108,6 +113,7 @@
     </div>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/Dept.js"></script>
     <script type="text/javascript"></script>
   </body>
 </html>
