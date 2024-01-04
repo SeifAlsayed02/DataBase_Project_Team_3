@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
@@ -9,14 +10,14 @@ db = SQLAlchemy(app)
 
 
 class Admin(db.Model):
-    _tablename_ = 'admins'
+    __tablename__ = 'admins'
     code = db.Column(db.String(50), primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
 class Doctor(db.Model):
-    _tablename_ = 'doctors'
+    __tablename__ = 'doctors'
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     name = db.Column(db.String(255), nullable=False)
@@ -27,7 +28,7 @@ class Doctor(db.Model):
 
 
 class Patient(db.Model):
-    _tablename_ = 'patients'
+    __tablename__ = 'patients'
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     name = db.Column(db.String(255), nullable=False)
@@ -38,7 +39,7 @@ class Patient(db.Model):
 
 
 class Appointment(db.Model):
-    _tablename_ = 'appointments'
+    __tablename__ = 'appointments'
     appointmentid = db.Column(db.Integer, primary_key=True)
     appointmentdate = db.Column(db.Date, nullable=False)
     appointmenttime = db.Column(db.Time, nullable=False)
@@ -48,7 +49,7 @@ class Appointment(db.Model):
 
 
 class Scan(db.Model):
-    _tablename_ = 'scans'
+    __tablename__ = 'scans'
     scanid = db.Column(db.Integer, primary_key=True)
     scandate = db.Column(db.Date, nullable=False)
     scantime = db.Column(db.Time, nullable=False)
@@ -56,13 +57,13 @@ class Scan(db.Model):
     patientid = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
 
 class ScanFile(db.Model):
-    _tablename_ = 'scanfiles'
+    __tablename__ = 'scanfiles'
     scanid = db.Column(db.Integer, primary_key=True)
     #scanid = db.Column(db.Integer, db.ForeignKey('scans.scan_id'), nullable=False)
     file = db.Column(db.Text, nullable=False)
 
 class Prescription(db.Model):
-    _tablename_ = 'prescriptions'
+    __tablename__ = 'prescriptions'
     prescriptionid = db.Column(db.Integer, primary_key=True)
     prescriptiondate = db.Column(db.Date, nullable=False)
     prescriptiontime = db.Column(db.Time, nullable=False)
@@ -70,7 +71,7 @@ class Prescription(db.Model):
     patientid = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
 
 class PrescriptionFile(db.Model):
-    _tablename_ = 'prescriptionfiles'
+    __tablename__ = 'prescriptionfiles'
     id = db.Column(db.Integer, primary_key=True)
     prescription_id = db.Column(db.Integer, db.ForeignKey('prescriptions.prescription_id'), nullable=False)
     file = db.Column(db.Text, nullable=False)
@@ -253,5 +254,5 @@ def patient_dashboard(user_id):
     return render_template('patient_dashboard.html', user=user, doctors=doctors,scanfiles=scanfiles, appointments=appointments, scans=scans, prescriptions=prescriptions)
 
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
