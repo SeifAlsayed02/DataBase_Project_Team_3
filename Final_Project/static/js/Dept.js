@@ -6,7 +6,7 @@ console.log("hello");
 let dept1 = document.getElementById("dept1");
 let dept2 = document.getElementById("dept2");
 let place = document.querySelector(".dept span");
-let root_theme = document.querySelector(":root").checked;
+let root_theme = document.querySelector(":root");
 
 console.log(dept1);
 // console.log(dept2);
@@ -24,6 +24,13 @@ function checkButton() {
     root_theme.style.setProperty("--color-primary", "#005383");
     root_theme.style.setProperty("--color-low", "#006291");
     root_theme.style.setProperty("--color-secondary", "#f85a40");
+    root_theme.style.setProperty("--color-default", "#222222");
+    // $(":root").css("--color-primary", "#005383");
+    // $(":root").css("--color-low", "#006291");
+    // $(":root").css("--color-secondary", "#f85a40");
+    // localStorage.setItem("panelTheme", theme);
+    // $("#current-theme").text(theme);
+    // $(":root").css("--color-primary", "#005383");
   }
 }
 // if (dept2.checked) {

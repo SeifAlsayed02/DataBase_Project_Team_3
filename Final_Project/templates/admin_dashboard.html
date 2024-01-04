@@ -164,17 +164,22 @@
 
           <div class="row gy-4 portfolio-container">
 
-            <div class="col-xl-4 col-md-6 portfolio-item filter-app">
-              <div class="portfolio-wrap">
-                <a href="../static/assets/img/dr.webp" data-gallery="portfolio-gallery-app" class="glightbox"><img src="../static/assets/img/dr.webp" class="img-fluid" alt=""></a>
-                <div class="portfolio-info">
-                  <h4><a href="doctor_list.html" title="More Details">Doctor 1</a></h4>
-                  <p>Click for more details</p>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
+            {% for doctor in doctors %}
+                <div class="col-xl-4 col-md-6 portfolio-item filter-app">
+                    <div class="portfolio-wrap">
+                        <a href="../static/assets/img/dr.webp" data-gallery="portfolio-gallery-app" class="glightbox">
+                            <img src="../static/assets/img/dr.webp" class="img-fluid" alt="">
+                        </a>
+                        <div class="portfolio-info">
+                            <h4><a href="{{ url_for('doctor_details', user_id=doctor.id) }}" title="More Details">{{ doctor.name }}</a></h4>
+                            <p>Click for more details</p>
+                        </div>
+                    </div>
+                </div><!-- End Portfolio Item -->
+            {% endfor %}
+        <!-- </div>End Portfolio Container -->
 
-            <div class="col-xl-4 col-md-6 portfolio-item filter-product">
+            <!-- <div class="col-xl-4 col-md-6 portfolio-item filter-product">
               <div class="portfolio-wrap">
                 <a href="../static/assets/img/dr.webp" data-gallery="portfolio-gallery-app" class="glightbox"><img src="../static/assets/img/dr.webp" class="img-fluid" alt=""></a>
                 <div class="portfolio-info">
@@ -182,7 +187,7 @@
                   <p>Click for more details</p>
                 </div>
               </div>
-            </div><!-- End Portfolio Item -->
+            </div>End Portfolio Item
 
             <div class="col-xl-4 col-md-6 portfolio-item filter-branding">
               <div class="portfolio-wrap">
@@ -192,7 +197,7 @@
                   <p>Click for more details</p>
                 </div>
               </div>
-            </div><!-- End Portfolio Item -->
+            </div>End Portfolio Item -->
 
           </div><!-- End Portfolio Container -->
 

@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
@@ -10,14 +9,14 @@ db = SQLAlchemy(app)
 
 
 class Admin(db.Model):
-    __tablename__ = 'admins'
+    _tablename_ = 'admins'
     code = db.Column(db.String(50), primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
 class Doctor(db.Model):
-    __tablename__ = 'doctors'
+    _tablename_ = 'doctors'
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     name = db.Column(db.String(255), nullable=False)
@@ -28,7 +27,7 @@ class Doctor(db.Model):
 
 
 class Patient(db.Model):
-    __tablename__ = 'patients'
+    _tablename_ = 'patients'
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     name = db.Column(db.String(255), nullable=False)
@@ -39,7 +38,7 @@ class Patient(db.Model):
 
 
 class Appointment(db.Model):
-    __tablename__ = 'appointments'
+    _tablename_ = 'appointments'
     appointmentid = db.Column(db.Integer, primary_key=True)
     appointmentdate = db.Column(db.Date, nullable=False)
     appointmenttime = db.Column(db.Time, nullable=False)
@@ -49,7 +48,7 @@ class Appointment(db.Model):
 
 
 class Scan(db.Model):
-    __tablename__ = 'scans'
+    _tablename_ = 'scans'
     scanid = db.Column(db.Integer, primary_key=True)
     scandate = db.Column(db.Date, nullable=False)
     scantime = db.Column(db.Time, nullable=False)
@@ -57,13 +56,13 @@ class Scan(db.Model):
     patientid = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
 
 class ScanFile(db.Model):
-    __tablename__ = 'scanfiles'
+    _tablename_ = 'scanfiles'
     scanid = db.Column(db.Integer, primary_key=True)
     #scanid = db.Column(db.Integer, db.ForeignKey('scans.scan_id'), nullable=False)
     file = db.Column(db.Text, nullable=False)
 
 class Prescription(db.Model):
-    __tablename__ = 'prescriptions'
+    _tablename_ = 'prescriptions'
     prescriptionid = db.Column(db.Integer, primary_key=True)
     prescriptiondate = db.Column(db.Date, nullable=False)
     prescriptiontime = db.Column(db.Time, nullable=False)
@@ -71,7 +70,7 @@ class Prescription(db.Model):
     patientid = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
 
 class PrescriptionFile(db.Model):
-    __tablename__ = 'prescriptionfiles'
+    _tablename_ = 'prescriptionfiles'
     id = db.Column(db.Integer, primary_key=True)
     prescription_id = db.Column(db.Integer, db.ForeignKey('prescriptions.prescription_id'), nullable=False)
     file = db.Column(db.Text, nullable=False)
@@ -138,6 +137,8 @@ def patient_details(user_id):
     user = Patient.query.get(user_id)
     return render_template('patient_details.html', user=user)
 
+
+
 @app.route('/signup/patient/<int:user_id>', methods=['GET', 'POST'])
 def reserve_appointment(user_id):
     user = Patient.query.get(user_id)
@@ -189,15 +190,22 @@ def signup_doctor():
 
     return render_template('signup_doctor.html')
 
+@app.route('/doctor/details/<int:user_id>')
+def doctor_details(user_id):
+    user = Doctor.query.get(user_id)
+    return render_template('patient_details.html', user=user)
 
-@app.route('/admin/dashboard/<string:user_code>')
+@app.route('/admin/dashboard/<string:user_code>', methods=['GET', 'POST'])
 def admin_dashboard(user_code):
+    print("exxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
     user = Admin.query.get(user_code)
+    patients = Patient.query.all()
+    doctors = Doctor.query.all()
     if user:
         print(user.code)
         print(user.username)
         print(user.email)
-    return render_template('patient_dashboard.html')
+    return render_template('admin_dashboard.html', user=user, patients=patients, doctors=doctors)
 
 @app.route('/doctor/dashboard/<int:user_id>', methods=['GET', 'POST'])
 def doctor_dashboard(user_id):
@@ -245,5 +253,5 @@ def patient_dashboard(user_id):
     return render_template('patient_dashboard.html', user=user, doctors=doctors,scanfiles=scanfiles, appointments=appointments, scans=scans, prescriptions=prescriptions)
 
 
-if __name__ == '__main__':
+if __name__ == '_main_':
     app.run(debug=True)
