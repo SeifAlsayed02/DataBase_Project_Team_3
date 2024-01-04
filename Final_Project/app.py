@@ -366,30 +366,6 @@ def login():
     # If no user is found
     return render_template('index.html', error='Invalid login credentials')
 
-# @app.route('/login', methods=['POST'])
-# def login():
-#     The_email = request.form.get('exampleInputEmail1')
-#     The_password = request.form.get('exampleInputPassword1')
-#     user_type = request.form.get('user')
-
-#     if user_type == 'Admin':
-#         user = Admin.query.filter_by(email=The_email, password=The_password).first()
-#     elif user_type == 'Doctor':
-#         user = Doctor.query.filter_by(email=The_email, password=The_password).first()
-#     elif user_type == 'Patient':
-#         user = Patient.query.filter_by(email=The_email, password=The_password).first()
-#     else:
-#         return render_template('index.html', error='Invalid user type')
-
-#     if user:
-#         if user_type == 'Admin':
-#             return redirect(url_for('admin_dashboard', user_id=user.code))
-#         elif user_type == 'Doctor':
-#             return redirect(url_for('doctor_dashboard', user_id=user.id))
-#         elif user_type == 'Patient':
-#             return redirect(url_for('patient_dashboard', user_id=user.id))
-#     else:
-#         return render_template('index.html', error='Invalid login credentials')
     
 @app.route('/signup/patient', methods=['GET', 'POST'])
 def signup_patient():
