@@ -10,6 +10,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../static/styles/index.css" />
+    <link rel="stylesheet" href="../static/assets/css/main.css" />
   </head>
   <body>
     <div id="main-wrapper" class="container">
@@ -49,27 +50,26 @@
                       <div class="form-group">
                         <h6>Department</h6>
                         <div class="department">
-                          <label
-                            ><input
-                              type="radio"
-                              id="dept1"
-                              name="department"
-                              value="dept1"
-                            />Dept A</label
-                          >
-                          <label
-                            ><input
-                              type="radio"
-                              id="dept2"
-                              name="department"
-                              value="dept2"
-                            />Dept B</label
-                          >
+                          <input
+                            type="radio"
+                            id="dept1"
+                            name="department"
+                            value="dept1"
+                          />Dept A
+                          <br />
+                          <input
+                            type="radio"
+                            id="dept2"
+                            name="department"
+                            value="dept2"
+                          />Dept B
+                          <br />
                         </div>
                       </div>
-                      <button class="btn btn-theme">
-                        <a href="patient_dashboard.html">Login</a>
-                      </button>
+                      <!-- <button type="button" onclick=" checkButton()">
+                        Submit
+                      </button> -->
+                      <button type="submit" class="btn btn-theme">Login</button>
                       <a href="#l" class="forgot-link float-right text-primary"
                         >Forgot password?</a
                       >
@@ -95,18 +95,18 @@
 
           <p class="text-muted text-center mt-3 mb-0">
             Don't have an account as a
-            <select name="user_type" id="user_type">
+            <!-- <select name="user_type" id="user_type">
               <option value="" selected></option>
               <option value="Patient">Patient</option>
               <option value="doctor">Doctor</option>
-            </select>
-            ?
+            </select> -->
             <a href="{{ url_for('signup_patient') }}" class="text-primary ml-1"
               >Patient</a
             >
+            or
             <a href="{{ url_for('signup_doctor') }}" class="text-primary ml-1"
               >Doctor</a
-            >
+            >?
           </p>
         </div>
       </div>
