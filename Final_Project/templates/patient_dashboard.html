@@ -240,84 +240,102 @@
         </div>
 
         <div class="row gx-lg-0 gy-4">
-
-          
-
           <div class="col-lg-12">
-            <form action="/static/forms/contact.php" method="post" role="form" class="php-email-form">
-              <div class="row mt-2">
-                <div class="col-md-4">
-                  <label for="appointment_date" class="labels">Appointment Date</label>
-                  <input type="date" class="form-control" name="appointment_date" id="appointment_date" required>
+            <form action="{{ url_for('patient_dashboard', user_id=user.id) }}" method="post" role="form" class="php-email-form">
+                 
+                  <div class="row mt-2">
+                      <div class="col-md-4">
+                          <label for="appointment_date" class="labels">Appointment Date</label>
+                          <input type="date" class="form-control" name="appointment_date" id="appointment_date" required>
+                      </div>
+                      <div class="col-md-4">
+                          <label for="appointment_time" class="labels">Appointment Time</label>
+                          <input type="time" class="form-control" name="appointment_time" id="appointment_time" required>
+                      </div>
+                      <div class="col-md-4">
+                          <label for="doctorName">Doctor Name</label>
+                          <br>
+                          <select name="doctor_id" id="doctor_id">
+                              {% for doctor in doctors %}
+                                  <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group mt-3">
+                      <textarea class="form-control" name="message" rows="7" placeholder="Message" required></textarea>
+                  </div>
+                  <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-lg btn-primary">Reserve</button>
                 </div>
-                <div class="col-md-4">
-                  <label for="appointment_time" class="labels">Appointment Time</label>
-                  <input type="time" class="form-control" name="appointment_time" id="appointment_time" required>
-                </div>
-                <div class="col-md-4">
-                  <label for="doctorName">Doctor Name</label>
-                  <br>
-                  <select name="doctorName" id="doctorName">
-                    <option value="" selected></option> 
-                    <option value="Ahmed">Dr Ahmed</option> 
-                    <option value="Ali">Dr Ali</option> 
-                    <option value="Ziyad">Dr Ziyad</option> 
-                  </select>
-                </div>
-              </div>
-              <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="7" placeholder="Message" required></textarea>
-              </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <!-- <div class="error-message"></div> -->
-                <div class="sent-message">Your message has been sent. Thank you!</div>
-              </div>
-              <div class="text-center"><button type="submit">Reserve</button></div>
-            </form>
+              </form>
           </div><!-- End Appointment Form -->
-        </div>
+      </div>
+      
         <br>
         <h2>View Section</h2>
         <br>
         <h4><u>Appointments</u></h4>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Doctor ID</th>
-              <th>Date</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-          </tbody>
-        </table>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Appointment ID</th>
+      <th>Doctor ID</th>
+      <th>Doctor's Name</th>
+      <th>Date</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+    {% for appointments in appointments %}
+      <tr>
+        <td>{{ appointments.appointmentid }}</td>
+        <td>{{ appointments.doctorid }}</td>
+        {% for doctor in doctors %}
+          {% if doctor.id == appointments.doctorid %}
+            <td>{{ doctor.name }}</td>
+          {% endif %}
+        {% endfor %}
+        <td>{{ appointments.appointmentdate }}</td>
+        <td>{{ appointments.appointmenttime }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
         <h4><u>Scans</u></h4>
         <table class="table">
           <thead>
             <tr>
               <th>ID</th>
               <th>Doctor ID</th>
+              <th>Doctor's Name</th>
               <th>Date</th>
               <th>Time</th>
               <th>File</th>
             </tr>
           </thead>
           <tbody id="tbody">
+            {% for scans in scans %}
               <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ scans.scanid }}</td>
+                <td>{{ scans.doctorid }}</td>
+                {% for doctor in doctors %}
+                  {% if doctor.id == scans.doctorid %}
+                    <td>{{ doctor.name }}</td>
+                  {% endif %}
+                {% endfor %}
+                <td>{{ scans.scandate }}</td>
+                <td>{{ scans.scantime }}</td>
+                <td>
+                {% for file in scanfiles %}
+                  <!-- {% if scans.scanid == scanfiles.scanid  %} -->
+                  <td>{{ scanfiles.file }}</td>
+                  <!-- {% endif %} -->
+                {% endfor %}
+              </td>
               </tr>
+            {% endfor %}
           </tbody>
         </table>
         <h4><u>Prescriptions</u></h4>
