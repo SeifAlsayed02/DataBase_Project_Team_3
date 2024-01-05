@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
@@ -136,8 +135,25 @@ def signup_patient():
 @app.route('/patient/details/<int:user_id>')
 def patient_details(user_id):
     user = Patient.query.get(user_id)
-    return render_template('patient_details.html', user=user)
+    doctors = Doctor.query.all()
+    scanfiles = ScanFile.query.all()
+    # Fetch patient's appointments
+    appointments = Appointment.query.filter_by(patientid=user_id).all()
+    scans = Scan.query.filter_by(patientid=user_id).all()
+    prescriptions = Prescription.query.filter_by(patientid=user_id).all()
+    
+    return render_template('patient_list.html', user=user,doctors=doctors, scanfiles=scanfiles,  appointments=appointments, scans=scans,prescriptions=prescriptions)
 
+@app.route('/doctor/details/<int:user_id>')
+def doctor_details(user_id):
+    user = Doctor.query.get(user_id)
+    patients = Patient.query.all()
+    scanfiles = ScanFile.query.all()
+    # Fetch patient's appointments
+    appointments = Appointment.query.filter_by(doctorid=user_id).all()
+    scans = Scan.query.filter_by(doctorid=user_id).all()
+    prescriptions = Prescription.query.filter_by(doctorid=user_id).all()
+    return render_template('doctor_list.html', user=user, patients=patients, scanfiles=scanfiles,  appointments=appointments, scans=scans,prescriptions=prescriptions)
 
 
 @app.route('/signup/patient/<int:user_id>', methods=['GET', 'POST'])
@@ -191,10 +207,9 @@ def signup_doctor():
 
     return render_template('signup_doctor.html')
 
-@app.route('/doctor/details/<int:user_id>')
-def doctor_details(user_id):
-    user = Doctor.query.get(user_id)
-    return render_template('patient_details.html', user=user)
+
+
+
 
 @app.route('/admin/dashboard/<string:user_code>', methods=['GET', 'POST'])
 def admin_dashboard(user_code):
